@@ -57,12 +57,13 @@ func main() {
 	router.HandleFunc("/items", ItemsIndex).Methods("GET")
 	router.HandleFunc("/cache/get/itemList", ItemsIndex).Methods("GET")
 	router.HandleFunc("/itemDB", ItemsIndex).Methods("GET")
-	router.HandleFunc("/items/search={name}", Search).Methods("GET")
-	router.HandleFunc("/itemDB/search={name}", Search).Methods("GET")
+	router.HandleFunc("/items/search={name}", SearchItem).Methods("GET")
+	router.HandleFunc("/itemDB/search={name}", SearchItem).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
+// Index A basic function that lists all functions
 func Index(w http.ResponseWriter, r *http.Request) {
 	_, err := fmt.Fprintln(w, "Welcome!")
 	if err != nil {
@@ -70,6 +71,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// ItemsIndex A handler to give out all the items stored in the api.
 func ItemsIndex(w http.ResponseWriter, r *http.Request) {
 	itemresponse := item.DictWithItemList{Items: items,
 		Request: item.Request{Timestamp: time.Now().Unix(), Version: version}}
@@ -82,7 +84,10 @@ func ItemsIndex(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func Search(w http.ResponseWriter, r *http.Request) {
+// SearchItem A handler to give out a specific item or multiple items up to 10 items at a time.
+// Reasoning: Requesting a whole build is now a lot easier
+// Multiple Items should be seperated by a ',' the list can be in {} or not.
+func SearchItem(w http.ResponseWriter, r *http.Request) {
 	searches := mux.Vars(r)
 	searches["name"] = strings.Replace(searches["name"], "{", "", 1)
 	searches["name"] = strings.Replace(searches["name"], "}", "", 1)
