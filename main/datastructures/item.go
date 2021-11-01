@@ -1,4 +1,4 @@
-package item
+package datastructures
 
 type Item struct {
 	Name                  string `json:"name"`
@@ -92,8 +92,8 @@ type Item struct {
 
 type List []Item
 
-type Request struct{
-	Timestamp int64     `json:"timestamp"`
+type Request struct {
+	Timestamp int64   `json:"timestamp"`
 	Version   float32 `json:"version"`
 }
 

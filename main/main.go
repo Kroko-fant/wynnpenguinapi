@@ -10,10 +10,10 @@ import (
 	"os"
 	"strings"
 	"time"
-	"wynnpenguinapi/main/item"
+	"wynnpenguinapi/main/datastructures"
 )
 
-var items []item.Item
+var items []datastructures.Item
 var version float32
 
 //TODO: Write Files
@@ -25,7 +25,6 @@ func main() {
 	//
 	jsonFile, err := os.Open("data/api.json")
 	if err != nil {
-		fmt.Println(err)
 		panic(err)
 	}
 	defer func(jsonFile *os.File) {
@@ -35,10 +34,10 @@ func main() {
 		}
 	}(jsonFile)
 	byteValue, _ := ioutil.ReadAll(jsonFile)
-	var data item.DictWithItemList
+	var data datastructures.DictWithItemList
 	err = json.Unmarshal(byteValue, &data)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
 	//Iterate over all items
 	for _, element := range data.Items {
@@ -73,8 +72,8 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 // ItemsIndex A handler to give out all the items stored in the api.
 func ItemsIndex(w http.ResponseWriter, r *http.Request) {
-	itemresponse := item.DictWithItemList{Items: items,
-		Request: item.Request{Timestamp: time.Now().Unix(), Version: version}}
+	itemresponse := datastructures.DictWithItemList{Items: items,
+		Request: datastructures.Request{Timestamp: time.Now().Unix(), Version: version}}
 	w.Header().Set("Content-Type", "application/json")
 	if err := json.NewEncoder(w).Encode(itemresponse); err != nil {
 		_, err := fmt.Fprint(w, "Internal Server error")
@@ -101,7 +100,7 @@ func SearchItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var result item.List
+	var result datastructures.List
 
 	for _, name := range requested {
 		for index, i := range items {
@@ -118,8 +117,8 @@ func SearchItem(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	itemresponse := item.DictWithItemList{Items: result,
-		Request: item.Request{Timestamp: time.Now().Unix(), Version: version}}
+	itemresponse := datastructures.DictWithItemList{Items: result,
+		Request: datastructures.Request{Timestamp: time.Now().Unix(), Version: version}}
 
 	if err := json.NewEncoder(w).Encode(itemresponse); err != nil {
 		panic(err)
