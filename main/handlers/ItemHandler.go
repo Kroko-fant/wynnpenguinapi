@@ -89,10 +89,10 @@ func SearchItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	itemresponse := datastructures.Itemrequest{Items: result,
+	itemResponse := datastructures.Itemrequest{Items: result,
 		Request: datastructures.RequestStruct{Timestamp: time.Now().Unix(), Version: itemVersion}}
 
-	if err := json.NewEncoder(w).Encode(itemresponse); err != nil {
+	if err := json.NewEncoder(w).Encode(itemResponse); err != nil {
 		panic(err)
 	}
 

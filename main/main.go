@@ -27,7 +27,10 @@ func main() {
 	router.HandleFunc("/itemDB", handlers.ItemsIndex).Methods("GET")
 	router.HandleFunc("/items/search={name}", handlers.SearchItem).Methods("GET")
 	router.HandleFunc("/itemDB/search={name}", handlers.SearchItem).Methods("GET")
-
+	router.HandleFunc("/player/search={name}", handlers.SearchPlayer).Methods("GET")
+	router.HandleFunc("/playerDB/search={name}", handlers.SearchPlayer).Methods("GET")
+	router.HandleFunc("/player/{name}", handlers.SearchPlayer).Methods("GET")
+	router.HandleFunc("/playerDB/{name}", handlers.SearchPlayer).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
